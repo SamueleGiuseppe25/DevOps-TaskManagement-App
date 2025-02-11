@@ -1,5 +1,6 @@
       // Function to add a new student
       const apiUrl = "https://localhost:7276/api/Student";
+      
       async function addStudent(event) {
         event.preventDefault(); // Prevent form from refreshing page
 

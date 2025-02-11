@@ -8,7 +8,15 @@ namespace epita_2025_core_api_001_students.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        public StudentController() { }
+        private readonly ILogger<StudentController> _logger;
+        private readonly AppDbContext _context;
+
+        public StudentController(ILogger<StudentController> logger, AppDbContext context)
+        {
+            _logger = logger;
+            _context = context;
+        }
+     
 
         [HttpGet]
         public IActionResult Get()
