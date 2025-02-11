@@ -28,20 +28,25 @@ namespace epita_2025_core_api_001_students.Controllers
 
         [HttpPost]
         
-        public IActionResult Post([FromBody] Student student)
+        public async Task<IActionResult> Post([FromBody] Student student)
         {
-            return Ok($"Student added {student.Id}");
+
+            _context.Students.Add(student);
+            await _context.SaveChangesAsync();
+            return Ok(GetStudents());
         }
 
         private List<Student> GetStudents()
         {
-            return new List<Student>()
-    {
-                new Student() { Id = 1, Name = "Johnx", Email = "john2@test.com", Age = 20, Course = "Computer Science" },
-                new Student() { Id = 2, Name = "Janex", Email = "john2@test.com", Age = 21, Course = "Maths" }, 
-                new Student() { Id = 3, Name = "Doex", Email = "john2@test.com", Age = 22, Course = "History" }
 
-    };
+            return _context.Students.ToList();
+    //        return new List<Student>()
+    //{
+    //            new Student() { Id = 1, Name = "Johnx", Email = "john2@test.com", Age = 20, Course = "Computer Science" },
+    //            new Student() { Id = 2, Name = "Janex", Email = "john2@test.com", Age = 21, Course = "Maths" }, 
+    //            new Student() { Id = 3, Name = "Doex", Email = "john2@test.com", Age = 22, Course = "History" }
+
+            //};
         }
     }
 }
