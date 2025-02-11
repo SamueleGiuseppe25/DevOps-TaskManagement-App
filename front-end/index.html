@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="./js/addstudent.js"></script>    
     <script src="./js/site.js"></script>    
     <style>
         table {
@@ -19,16 +20,29 @@
         th {
             background-color: #f4f4f4;
         }
+        form {
+            margin-top: 20px;
+
+        }
+        input, button {
+            padding: 10px;
+            margin: 5px;
+        }
     </style>
 </head>
 <body onload="init()">
+<h1>Add New Student</h1>
+    <form id="studentForm">
+        <input type="hidden" id="id" name="id"> 
+        <input type="text" id="name" name="name" placeholder="Name">
+        <input type="email" id="email" name="email" placeholder="Email">
+        <input type="number" id="age" name="age" placeholder="Age">
+        <input type="text" id="course" name="course" placeholder="Course">
+        <button type="submit">Add Student</button>
+    </form>
 
-    
-
-
-
+<h1>Student Listing</h1>
     <table id="studentTable">
-
         <thead>
             <tr>
                 <th>ID</th>

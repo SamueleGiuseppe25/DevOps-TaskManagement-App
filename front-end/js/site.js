@@ -1,5 +1,8 @@
 function init() {
     console.log('init');
+  
+       // Event listener for form submission
+       document.getElementById("studentForm").addEventListener("submit", addStudent);
     FetchStudents()
 }
 
