@@ -1,0 +1,6 @@
+@epita_2025_core_api_001_students_HostAddress = http://localhost:5053
+
+GET {{epita_2025_core_api_001_students_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
