@@ -3,62 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="./js/addstudent.js"></script>    
-    <script src="./js/site.js"></script>    
+    <title>Task Management App</title>
+   
     <style>
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
+
         th, td {
             border: 1px solid black;
             padding: 10px;
             text-align: left;
         }
+
         th {
             background-color: #f4f4f4;
         }
+
         form {
             margin-top: 20px;
-
         }
+
         input, button {
             padding: 10px;
             margin: 5px;
         }
     </style>
 </head>
-<body onload="init()">
-<h1>Add New Task</h1>
-    <form id="studentForm">
-        <input type="hidden" id="id" name="id"> 
-        <input type="text" id="name" name="name" placeholder="Name">
-        <input type="email" id="email" name="email" placeholder="Email">
-        <input type="number" id="age" name="age" placeholder="Age">
-        <input type="text" id="course" name="course" placeholder="Course">
-        <button type="submit">Add Student</button>
+<body onload="loadTasks()">
+
+    <h1>Add New Task</h1>
+    <form id="taskForm">
+        <input type="text" id="title" name="title" placeholder="Task Title">
+        <input type="text" id="description" name="description" placeholder="Description">
+        <button type="submit">Add Task</button>
     </form>
 
-<h1>Task Listing</h1>
-    <table id="studentTable">
+    <h1>Task Listing</h1>
+    <table id="taskTable">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Age</th>
-                <th>Course</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Completed</th>
             </tr>
-
         </thead>
         <tbody>
             <!-- Data will be inserted here -->
-             <h3> Data will be inserted here </h3>
         </tbody>
-
     </table>
-    
+
+    <script src="./js/addtask.js"></script>
+
 </body>
 </html>

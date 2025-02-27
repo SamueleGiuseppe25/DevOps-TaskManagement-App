@@ -3,28 +3,32 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Abilita CORS correttamente
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        policy =>
+        {
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        });
+});
+
+// Configura il database (usa InMemory per ora, ma dovrai passare a un DB vero)
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseInMemoryDatabase("TaskDb"));
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseInMemoryDatabase("AppDbContext"));
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(builder =>
-    {
-        builder.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
-
 var app = builder.Build();
-app.UseCors();
 
-// Configure the HTTP request pipeline.
+// Abilita CORS
+app.UseCors("AllowAll");
+
+// Attiva Swagger solo in modalità sviluppo
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -32,9 +36,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.Run();
