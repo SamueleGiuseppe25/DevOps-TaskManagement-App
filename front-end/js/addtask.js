@@ -28,7 +28,7 @@
                 throw new Error("Failed to add task.");
             }
     
-            document.getElementById("taskForm").reset(); // Clear form
+            document.getElementById("studentForm").reset(); // Clear form
             FetchTasks(); // Refresh task list
         } catch (error) {
             console.error("Error adding task:", error);

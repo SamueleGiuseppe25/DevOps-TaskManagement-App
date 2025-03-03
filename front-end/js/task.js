@@ -2,7 +2,7 @@ function init() {
     console.log('Task management initialized.');
   
     // Event listener for form submission
-    document.getElementById("taskForm").addEventListener("submit", addTask);
+    document.getElementById("studentForm").addEventListener("submit", addTask);
     FetchTasks();
 }
 
