@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <Folder Include="front-end\" />
+    <Folder Include="Dockerfiles\" />
   </ItemGroup>
 
 </Project>
