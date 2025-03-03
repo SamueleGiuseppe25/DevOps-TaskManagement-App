@@ -53,9 +53,8 @@ input, select {
     min-width: 120px;
 }
 
-/* Stylish button */
+/* Stylish buttons */
 button {
-    background: #007BFF; /* Abu Dhabi Blue */
     color: white;
     border: none;
     cursor: pointer;
@@ -65,8 +64,28 @@ button {
     text-transform: uppercase;
 }
 
-button:hover {
+/* Primary button - Add Task */
+button.add-task {
+    background: #007BFF; /* Abu Dhabi Blue */
+}
+button.add-task:hover {
     background: #0056b3; /* Darker Abu Dhabi Blue */
+}
+
+/* Completed button - Green */
+button.complete-task {
+    background: #28A745; /* Green */
+}
+button.complete-task:hover {
+    background: #1e7e34; /* Darker Green */
+}
+
+/* Delete button - Red */
+button.delete-task {
+    background: #DC3545; /* Red */
+}
+button.delete-task:hover {
+    background: #a71d2a; /* Darker Red */
 }
 
 /* Add spacing between form and table */
@@ -108,10 +127,18 @@ td {
     border-right: 1px solid #ddd;
 }
 
-/* Highlight Priority Column with Gold */
-td:nth-child(5) { /* Priority column */
+/* Highlight Priority Column with colors */
+td.priority-low {
+    color: #28A745; /* Green for Low Priority */
     font-weight: bold;
-    color: #D4AF37; /* Ferrari Gold */
+}
+td.priority-medium {
+    color: #FFC107; /* Yellow for Medium Priority */
+    font-weight: bold;
+}
+td.priority-high {
+    color: #DC3545; /* Red for High Priority */
+    font-weight: bold;
 }
 
 /* Remove border from last column */
