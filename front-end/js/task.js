@@ -1,4 +1,4 @@
-function init() {
+﻿function init() {
     console.log('Task management initialized.');
   
     // Event listener for form submission
@@ -9,8 +9,8 @@ function init() {
 async function FetchTasks() {
     console.log('Fetching tasks...');
     try {
-        const response = await fetch('https://localhost:7276/api/Task');
-       
+        const response = await fetch(apiUrl);
+
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -20,7 +20,7 @@ async function FetchTasks() {
 
         const tasks = await response.json();
 
-        tasks.forEach(task => { 
+        tasks.forEach(task => {
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td>${task.id}</td>
@@ -28,7 +28,12 @@ async function FetchTasks() {
                 <td>${task.description}</td>
                 <td>${new Date(task.dueDate).toLocaleString()}</td>
                 <td>${task.priority}</td>
-                <td>${task.status}</td>`;
+                <td>${task.status}</td>
+                <td>
+                    <button onclick="completeTask(${task.id})">✔ Complete</button>
+                    <button onclick="deleteTask(${task.id})">🗑 Delete</button>
+                </td>
+            `;
             tableBody.appendChild(row);
         });
 
@@ -38,3 +43,4 @@ async function FetchTasks() {
         console.error(`Error fetching tasks: ${error}`);
     }
 }
+
