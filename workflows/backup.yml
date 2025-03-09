@@ -1,0 +1,28 @@
+name: Backup Repository
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight UTC
+  workflow_dispatch:  # Allows manual trigger
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Create a backup archive
+        run: |
+          zip -r backup_$(date +%F).zip . -x ".git/*"
+
+      - name: Commit and push to backup branch
+        run: |
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git checkout -b backup-branch || git checkout backup-branch
+          mv backup_$(date +%F).zip backups/
+          git add backups/
+          git commit -m "Automated backup on $(date)"
+          git push origin backup-branch
