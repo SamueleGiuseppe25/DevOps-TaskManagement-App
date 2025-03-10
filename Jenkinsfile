@@ -47,7 +47,8 @@ pipeline {
         }
         stage('Start Application') {
     steps {
-        bat 'python3 -m http.server 5500'
+        bat "python -m http.server 5500"
+
     }
 }
 
