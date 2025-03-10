@@ -15,33 +15,35 @@ jobs:
 
       - name: Create a backup archive
         run: |
-          zip -r backup_$(date +%F).zip . -x ".git/*"
+          zip -r backup_$(date +%F).zip . -x ".git/*"  # Creates a backup ZIP file, excluding .git directory
 
       - name: Prepare backup directory
         run: |
-          mkdir -p backups
+          mkdir -p backups  # Create backups directory if it doesn't exist
 
       - name: Move backup file to backups directory
         run: |
-          mv backup_$(date +%F).zip backups/
+          mv backup_$(date +%F).zip backups/  # Move backup ZIP into the backups directory
 
       - name: Commit and push to backup branch
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
-          
-          # Checkout the feature-branch (make sure you are working on it)
-          git checkout feature-branch  # This is where your code is!
 
-          # Pull the latest changes from the feature branch
+          # Checkout the feature branch
+          git checkout feature-branch  # Replace 'feature-branch' with your actual branch name
+
+          # Pull the latest changes from the feature branch to make sure you're up to date
           git pull origin feature-branch
 
-          # Ensure you're working with the backup-branch
+          # Create or switch to the backup-branch (create if it doesn't exist)
           git checkout -b backup-branch || git checkout backup-branch
 
-          # Add and commit the backup
+          # Add the backup file to Git
           git add backups/
+
+          # Commit the backup
           git commit -m "Automated backup on $(date)"
 
-          # Push the backup to the remote backup-branch
+          # Push to the backup branch
           git push origin backup-branch
