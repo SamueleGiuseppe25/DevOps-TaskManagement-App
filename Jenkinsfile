@@ -10,37 +10,46 @@ pipeline {
             }
         }
 
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
-                    bat "docker build -t %DOCKER_IMAGE% ."  
+                    // Use 'sh' for Unix-based systems and 'bat' for Windows
+                    if (isUnix()) {
+                        sh 'docker build -t $DOCKER_IMAGE .'
+                    } else {
+                        bat 'docker build -t %DOCKER_IMAGE% .'
+                    }
                 }
             }
         }
 
-        //stage('Run Tests') {
-            //steps {
-                //bat 'docker run --rm %DOCKER_IMAGE% pytest' // Adjust if needed
-            //}
-        //}
-
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-                    bat 'docker push %DOCKER_IMAGE%'
+                script {
+                    // Use 'sh' for Unix-based systems and 'bat' for Windows
+                    if (isUnix()) {
+                        withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                            sh 'docker push $DOCKER_IMAGE'
+                        }
+                    } else {
+                        withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                            bat 'docker push %DOCKER_IMAGE%'
+                        }
+                    }
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                bat 'docker run -d -p 5000:5000 %DOCKER_IMAGE%'
+                script {
+                    // Deploy the Docker container
+                    if (isUnix()) {
+                        sh 'docker run -d -p 5000:5000 $DOCKER_IMAGE'
+                    } else {
+                        bat 'docker run -d -p 5000:5000 %DOCKER_IMAGE%'
+                    }
+                }
             }
         }
     }
