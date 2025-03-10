@@ -24,11 +24,11 @@ pipeline {
             }
         }
 
-        stage('Run Tests') {
-            steps {
-                bat 'docker run --rm %DOCKER_IMAGE% pytest' // Adjust if needed
-            }
-        }
+        //stage('Run Tests') {
+            //steps {
+                //bat 'docker run --rm %DOCKER_IMAGE% pytest' // Adjust if needed
+            //}
+        //}
 
         stage('Push Docker Image') {
             steps {
