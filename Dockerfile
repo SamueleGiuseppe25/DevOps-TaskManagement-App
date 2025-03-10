@@ -9,6 +9,8 @@ COPY . /app
 
 # Installa le dipendenze
 RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install pytest
+
 
 # Esponi la porta 5000
 EXPOSE 5000
