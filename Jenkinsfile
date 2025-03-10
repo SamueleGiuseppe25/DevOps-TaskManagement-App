@@ -45,5 +45,11 @@ pipeline {
                 echo 'Deploying the application...'
             }
         }
+        stage('Start Application') {
+    steps {
+        bat 'python3 -m http.server 5500'
+    }
+}
+
     }
 }
