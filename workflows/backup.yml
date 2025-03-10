@@ -17,12 +17,31 @@ jobs:
         run: |
           zip -r backup_$(date +%F).zip . -x ".git/*"
 
+      - name: Prepare backup directory
+        run: |
+          mkdir -p backups
+
+      - name: Move backup file to backups directory
+        run: |
+          mv backup_$(date +%F).zip backups/
+
       - name: Commit and push to backup branch
         run: |
           git config --global user.email "github-actions@github.com"
           git config --global user.name "GitHub Actions"
+          
+          # Checkout the feature-branch (make sure you are working on it)
+          git checkout feature-branch  # This is where your code is!
+
+          # Pull the latest changes from the feature branch
+          git pull origin feature-branch
+
+          # Ensure you're working with the backup-branch
           git checkout -b backup-branch || git checkout backup-branch
-          mv backup_$(date +%F).zip backups/
+
+          # Add and commit the backup
           git add backups/
           git commit -m "Automated backup on $(date)"
+
+          # Push the backup to the remote backup-branch
           git push origin backup-branch
