@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "mcr.microsoft.com/mssql/server:2019-latest"
+        DOCKER_IMAGE = "devops-task-management-app:latest"
     }
     stages {
         stage('Clone Repository') {
