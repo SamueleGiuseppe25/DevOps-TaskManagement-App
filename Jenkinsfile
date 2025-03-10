@@ -24,25 +24,23 @@ pipeline {
             }
         }
 
-        //stage('Run Tests') {
-        //    steps {
-        //        bat 'docker run --rm %DOCKER_IMAGE% pytest' // Adjust if needed
-        //    }
-        //}
+        stage('Run Tests') {
+            steps {
+                bat 'docker run --rm %DOCKER_IMAGE% pytest' // Adjust if needed
+            }
+        }
 
         stage('Push Docker Image') {
             steps {
-                //withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-                    //bat 'docker push %DOCKER_IMAGE%'
-                    echo 'Pushing Docker image...'
-                //}
+                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                    bat 'docker push %DOCKER_IMAGE%'
+                }
             }
         }
 
         stage('Deploy') {
             steps {
-                //bat 'docker run -d -p 5000:5000 %DOCKER_IMAGE%'
-                echo 'Deploying the application...'
+                bat 'docker run -d -p 5000:5000 %DOCKER_IMAGE%'
             }
         }
     }
