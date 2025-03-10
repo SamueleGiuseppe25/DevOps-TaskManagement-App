@@ -12,27 +12,27 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
+                bat 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
         stage('Run Tests') {
             steps {
-                sh 'docker run --rm $DOCKER_IMAGE pytest' // Adjust if needed
+                bat 'docker run --rm $DOCKER_IMAGE pytest' // Adjust if needed
             }
         }
 
         stage('Push Docker Image') {
             steps {
                 withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-                    sh 'docker push $DOCKER_IMAGE'
+                    bat 'docker push $DOCKER_IMAGE'
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 5000:5000 $DOCKER_IMAGE'
+                bat 'docker run -d -p 5000:5000 $DOCKER_IMAGE'
             }
         }
     }
