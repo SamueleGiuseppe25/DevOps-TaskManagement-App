@@ -1,12 +1,25 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = "samuelegiuseppe25/devops-taskmanagement-app"
+        DOCKER_IMAGE = "mcr.microsoft.com/mssql/server:2019-latest"
     }
     stages {
         stage('Clone Repository') {
             steps {
                 git branch: 'feature-branch', url: 'https://github.com/SamueleGiuseppe25/DevOps-TaskManagement-App.git'
+            }
+        }
+         stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    bat "docker build -t %DOCKER_IMAGE% ."  
+                }
             }
         }
 
