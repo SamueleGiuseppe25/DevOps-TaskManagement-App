@@ -15,6 +15,7 @@ services:
     build:
       context: ./TaskManagementApp.Api
       dockerfile: Dockerfile
+    image: 'backend-image:latest'
     ports:
       - "5000:80"
     depends_on:
@@ -26,6 +27,7 @@ services:
     build:
       context: ./TaskManagementApp.Client
       dockerfile: Dockerfile
+    image: 'frontend-image:latest'
     ports:
       - "3000:80"
     depends_on:
