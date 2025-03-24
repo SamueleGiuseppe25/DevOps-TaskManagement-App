@@ -1,5 +1,5 @@
 # Usa Python 3.9 come base
-FROM python:3.14-rc-slim-bookworm
+FROM python:3.14-rc-alpine3.21
 
 # Imposta la directory di lavoro
 WORKDIR /app
