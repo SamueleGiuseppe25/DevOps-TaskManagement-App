@@ -1,9 +1,10 @@
 name: Backup Repository
+# Coder Kaan Oz
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # Runs every day at midnight UTC
-  workflow_dispatch:  # Allows manual trigger
+    - cron: '0 0 * * *'  # EDIT: Runs every night at 12:00 AM GMT
+  workflow_dispatch:  # Allows manual execution
 
 jobs:
   backup:
@@ -11,39 +12,45 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all branches
+          ref: feature-branch  # EDIT: Fetch only 'feature-branch'
+          token: ${{ secrets.PAT }}  # Requires PAT ***
 
-      - name: Create a backup archive
+      - name: Set up Git
         run: |
-          zip -r backup_$(date +%F).zip . -x ".git/*"  # Creates a backup ZIP file, excluding .git directory
+          echo "Setting up Git configuration"
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
 
-      - name: Prepare backup directory
+      - name: Create backup branch
+        id: create_branch
         run: |
-          mkdir -p backups  # Create backups directory if it doesn't exist
+          echo "Creating backup branch"
+          TIMESTAMP=$(TZ="GMT" date +"%Y-%m-%d-%H-%M")  # EDIT: Set timezone to GMT
+          BRANCH_NAME="backup-$TIMESTAMP"
+          echo "Branch name: $BRANCH_NAME"
+          git checkout -b $BRANCH_NAME
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
 
-      - name: Move backup file to backups directory
+      - name: Add backup remote
         run: |
-          mv backup_$(date +%F).zip backups/  # Move backup ZIP into the backups directory
+          echo "Adding remote backup repository"
+          git remote add backup https://${{ secrets.PAT }}@github.com/i-ayo/backupRepo  # EDIT: Set your username & backup repo
+          git remote -v  # List remotes to verify
 
-      - name: Commit and push to backup branch
+      - name: Pull changes from backup repository
         run: |
-          git config --global user.email "github-actions@github.com"
-          git config --global user.name "GitHub Actions"
+          echo "Pulling changes from backup repository"
+          git pull backup feature-branch --rebase || echo "No changes to pull"  # EDIT: Pull from 'feature-branch' instead of 'main'
 
-          # Checkout the feature branch
-          git checkout feature-branch  # Replace 'feature-branch' with your actual branch name
+      - name: Check PAT permissions
+        run: |
+          echo "Checking PAT permissions"
+          curl -H "Authorization: token ${{ secrets.PAT }}" https://api.github.com/user/repos
 
-          # Pull the latest changes from the feature branch to make sure you're up to date
-          git pull origin feature-branch
-
-          # Create or switch to the backup-branch (create if it doesn't exist)
-          git checkout -b backup-branch || git checkout backup-branch
-
-          # Add the backup file to Git
-          git add backups/
-
-          # Commit the backup
-          git commit -m "Automated backup on $(date)"
-
-          # Push to the backup branch
-          git push origin backup-branch
+      - name: Push to backup repository
+        run: |
+          echo "Pushing to remote repository"
+          git push backup ${{ env.BRANCH_NAME }} --force
