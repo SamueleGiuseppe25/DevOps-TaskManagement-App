@@ -1,9 +1,8 @@
 name: Backup Repository
-# Coder Kaan Oz
 
 on:
   schedule:
-    - cron: '0 * * * *'  # EDIT: Runs every night at 12:00 AM GMT
+    - cron: '0 0 * * *'  # Runs every day at midnight GMT
   workflow_dispatch:  # Allows manual execution
 
 jobs:
@@ -11,46 +10,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout feature-branch
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Fetch all branches
-          ref: feature-branch  # EDIT: Fetch only 'feature-branch'
-          token: ${{ secrets.PAT }}  # Requires PAT ***
+          fetch-depth: 0  # Fetch all history for all branches
+          ref: feature-branch  # Ensure feature-branch is checked out
+          token: ${{ secrets.PAT }}
 
       - name: Set up Git
         run: |
-          echo "Setting up Git configuration"
-          git config --global user.name 'github-actions'
-          git config --global user.email 'github-actions@github.com'
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
 
-      - name: Create backup branch
+      - name: Create a timestamped backup branch
         id: create_branch
         run: |
-          echo "Creating backup branch"
-          TIMESTAMP=$(TZ="GMT" date +"%Y-%m-%d-%H-%M")  # EDIT: Set timezone to GMT
+          TIMESTAMP=$(TZ="GMT" date +"%Y-%m-%d-%H-%M")  # Ensure GMT timezone
           BRANCH_NAME="backup-$TIMESTAMP"
-          echo "Branch name: $BRANCH_NAME"
-          git checkout -b $BRANCH_NAME
+          echo "Branch Name: $BRANCH_NAME"
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          git checkout -b $BRANCH_NAME
 
-      - name: Add backup remote
+      - name: Add backup remote repository
         run: |
-          echo "Adding remote backup repository"
-          git remote add backup https://${{ secrets.PAT }}@github.com/i-ayo/backupRepo  # EDIT: Set your username & backup repo
-          git remote -v  # List remotes to verify
+          git remote add backup https://${{ secrets.PAT }}@github.com/i-ayo/backupRepo.git
+          git remote -v  # Verify remote repositories
 
-      - name: Pull changes from backup repository
+      - name: Verify Backup Repo Access
         run: |
-          echo "Pulling changes from backup repository"
-          git pull backup feature-branch --rebase || echo "No changes to pull"  # EDIT: Pull from 'feature-branch' instead of 'main'
+          curl -H "Authorization: token ${{ secrets.PAT }}" https://api.github.com/repos/i-ayo/backupRepo
 
-      - name: Check PAT permissions
+      - name: Sync changes before backup
         run: |
-          echo "Checking PAT permissions"
-          curl -H "Authorization: token ${{ secrets.PAT }}" https://api.github.com/user/repos
+          git pull origin feature-branch --rebase || echo "No changes to pull"
 
-      - name: Push to backup repository
+      - name: Commit and push backup
         run: |
-          echo "Pushing to remote repository"
-          git push backup ${{ env.BRANCH_NAME }} --force
+          git add .
+          git commit -m "Automated backup on $(date)"
+          git push backup ${{ env.BRANCH_NAME }}
+
