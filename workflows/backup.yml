@@ -3,7 +3,7 @@ name: Backup Repository
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # EDIT: Runs every night at 12:00 AM GMT
+    - cron: '0 * * * *'  # EDIT: Runs every night at 12:00 AM GMT
   workflow_dispatch:  # Allows manual execution
 
 jobs:
