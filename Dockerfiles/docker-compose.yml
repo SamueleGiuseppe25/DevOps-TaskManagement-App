@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: devops-task-management-app:latest
+    environment:
+      - SA_PASSWORD=YourStrong!Passw0rd
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433:1433"
+    volumes:
+      - sql-data:/var/opt/mssql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "sqlcmd", "-U", "sa", "-P", "YourStrong!Passw0rd", "-Q", "SELECT 1"]
+      interval: 10s
+      retries: 5
+
+  backend:
+    build:
+      context: ./TaskManagementApp.Api
+      dockerfile: Dockerfile
+    image: backend-image:latest
+    ports:
+      - "5001:5000"  # Host port 5001 maps to container port 5000
+    depends_on:
+      - db
+    environment:
+      - ConnectionStrings__DefaultConnection=Server=db;Database=TaskManagementDB;User Id=sa;Password=YourStrong!Passw0rd;
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./TaskManagementApp.Client
+      dockerfile: Dockerfile
+    image: frontend-image:latest
+    ports:
+      - "5002:5000"  # Host port 5002 maps to container port 5000
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  sql-data:
+
+networks:
+  app-network:
+    driver: bridge

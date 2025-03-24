@@ -1,0 +1,52 @@
+name: Backup Repository
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Runs every day at midnight GMT
+  workflow_dispatch:  # Allows manual execution
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout feature-branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches
+          ref: feature-branch  # Ensure feature-branch is checked out
+          token: ${{ secrets.PAT }}
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Create a timestamped backup branch
+        id: create_branch
+        run: |
+          TIMESTAMP=$(TZ="GMT" date +"%Y-%m-%d-%H-%M")  # Ensure GMT timezone
+          BRANCH_NAME="backup-$TIMESTAMP"
+          echo "Branch Name: $BRANCH_NAME"
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          git checkout -b $BRANCH_NAME
+
+      - name: Add backup remote repository
+        run: |
+          git remote add backup https://${{ secrets.PAT }}@github.com/i-ayo/backupRepo.git
+          git remote -v  # Verify remote repositories
+
+      - name: Verify Backup Repo Access
+        run: |
+          curl -H "Authorization: token ${{ secrets.PAT }}" https://api.github.com/repos/i-ayo/backupRepo
+
+      - name: Sync changes before backup
+        run: |
+          git pull origin feature-branch --rebase || echo "No changes to pull"
+
+      - name: Commit and push backup
+        run: |
+          git add .
+          git commit -m "Automated backup on $(date)"
+          git push backup ${{ env.BRANCH_NAME }}
+

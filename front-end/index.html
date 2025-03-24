@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="./js/addstudent.js"></script>    
-    <script src="./js/site.js"></script>    
-    <style>
+    <title>Task Management</title>
+    <script src="./js/addtask.js"></script>    
+    <script src="./js/task.js"></script>  
+    <link rel="stylesheet" href="./css/styles.css">
+    <!-- <style>
         table {
             width: 100%;
             border-collapse: collapse;
@@ -22,42 +23,50 @@
         }
         form {
             margin-top: 20px;
-
         }
-        input, button {
+        input, button, select {
             padding: 10px;
             margin: 5px;
         }
-    </style>
+    </style> -->
 </head>
 <body onload="init()">
 <h1>Add New Task</h1>
     <form id="studentForm">
         <input type="hidden" id="id" name="id"> 
-        <input type="text" id="name" name="name" placeholder="Name">
-        <input type="email" id="email" name="email" placeholder="Email">
-        <input type="number" id="age" name="age" placeholder="Age">
-        <input type="text" id="course" name="course" placeholder="Course">
-        <button type="submit">Add Student</button>
+        <input type="text" id="title" name="title" placeholder="Task Title" required>
+        <input type="text" id="description" name="description" placeholder="Task Description">
+        <input type="datetime-local" id="dueDate" name="dueDate" required>
+        <select id="priority" name="priority">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select>
+        <select id="status" name="status">
+            <option value="Pending">Pending</option>
+            <option value="In Progress">In Progress</option>
+            
+        </select>
+        <button type="submit" class="add-task">Add Task</button>
+
     </form>
 
 <h1>Task Listing</h1>
-    <table id="studentTable">
+    <table id="taskTable">
         <thead>
             <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Age</th>
-                <th>Course</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Due Date</th>
+                <th>Priority</th>
+                <th>Status</th>
             </tr>
-
         </thead>
         <tbody>
             <!-- Data will be inserted here -->
         </tbody>
     </tbody>
     </table>
-    
 </body>
 </html>
